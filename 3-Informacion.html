@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Información | Centro Óptico La Económica F.P.</title>
+  <link rel="stylesheet" href="estilo1.css">
+</head>
+<body style="padding-top: 100px;">
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="2-pagina-principal2.html" class="nav-brand">👁️ La Económica F.P.</a>
+      <button class="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li class="nav-item"><a href="index.html" class="nav-link">Inicio</a></li>
+        <li class="nav-item"><a href="3-Informacion.html" class="nav-link">Información</a></li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">Productos ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="4-Registro de Productos.html">Registrar Productos</a></li>
+            <li><a href="ver-productos.html">Ver Productos</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">Categorías ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="5-Categorias.html">Registrar Categorías</a></li>
+            <li><a href="ver-categoria.html">Ver Categorías</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">Proveedores ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="6-Proveedores.html">Registrar Proveedores</a></li>
+            <li><a href="ver-proveedores.html">Ver Proveedores</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">Usuarios ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="7-gestion de usuario.html">Registrar Usuarios</a></li>
+            <li><a href="8-Empleados.html">Registrar Empleados</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="1-inicio de sesion.html" class="nav-link">Salir</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="info-section">
+    <div class="info-card">
+      <h3>🏢 Naturaleza de la Organización</h3>
+      <p>La función principal del Centro Óptico La Económica, F.P. es la producción y comercialización de lentes correctivos, convencionales y de contacto, además, cuenta con servicio de optometría, examen computarizado visual y para satisfacer los gustos del cliente e incrementar sus ventas cuenta con una variedad de monturas, estuches y lentes de protección solar para el cuidado ocular.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>🎯 Misión</h3>
+      <p>Proporcionar a la comunidad el mejor servicio visual, mediante precios accesibles y atención profesional, además de fomentar la educación sobre la salud visual y la importancia de la prevención y el cuidado ocular, esto con el propósito de poder mantenerse en el mercado.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>👁️ Visión</h3>
+      <p>El Centro Óptico La Económica, F.P. se enfoca en ser reconocido como la óptica líder en Boconó y sus alrededores, destacando por la calidad de sus servicios y productos, ofreciendo últimas tecnologías y tendencias en el campo óptico a sus pacientes.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>📖 Historia de Vida</h3>
+      <p>Centro Óptico La Económica, F.P. inició sus actividades comerciales el 22 de noviembre de 1996, siendo el registro de comercio bajo el Nº 193 tomo 4 según la planilla 739656 en Boconó, estado Trujillo, siendo la única propietaria Mariana del Carmen Serrano Moreno CI.V-10 481658, quien con la visión de ofrecer servicios ópticos de calidad a la comunidad boconesa, se enfocó en proporcionar atención personalizada y productos accesibles para mejorar la salud visual de sus clientes.</p>
+      <p style="margin-top: 12px;">A lo largo de los años, Centro Óptico La Económica, F.P. ha crecido significativamente, ampliando su gama de servicios. Comenzó ofreciendo exámenes de la vista y la venta de lentes, pero con el tiempo incorporó como principal recurso para mejorar la atención al cliente un Subgerente Jesús Figueroa, quien es hijo de la propietaria, además de servicios como adaptación de lentes de contacto, exámenes visuales especializados y ventas de monturas de diversas marcas.</p>
+      <p style="margin-top: 12px;">En cuanto a innovación y tecnología, el centro óptico ha invertido en tecnología moderna para realizar exámenes más precisos y ofrecer productos de última generación. Esto incluye equipos de diagnóstico avanzados y una selección variada de lentes que se adaptan a las necesidades específicas de cada cliente.</p>
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      document.querySelector('.hamburger').classList.toggle('active');
+      document.querySelector('.nav-menu').classList.toggle('active');
+    }
+    document.querySelectorAll('.nav-item').forEach(item => {
+      if (item.querySelector('.dropdown-menu')) {
+        item.querySelector('.nav-link').addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            item.classList.toggle('dropdown-active');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
