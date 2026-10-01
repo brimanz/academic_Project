@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - Sistema de Inventario</title>
+    <style>
+        :root {
+            --bg-pearl-base: #F8F9FA;
+            --bg-pearl-light: #EBF1F5;
+            --navy-deep: #0B192C;
+            --navy-gradient-start: #0B192C;
+            --navy-gradient-end: #1E3E62;
+            --celeste-soft: #89CFF0;
+            --celeste-hover: #70C1B3;
+            --celeste-hover-alt: #3AAFA9;
+            --celeste-brilliant: #E1F5FE;
+            --gold-dark-base: #B8860B;
+            --gold-dark-premium: #996515;
+            --gold-dark-muted: #C5A059;
+            --white: #FFFFFF;
+            --text-primary: #0B192C;
+            --text-secondary: #666666;
+            --border-color: #EBF1F5;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-pearl-base);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid var(--celeste-hover);
+            margin-bottom: 40px;
+        }
+        
+        .header h1 { color: var(--navy-deep); font-size: 36px; margin-bottom: 10px; }
+        .header p { color: var(--text-secondary); font-size: 18px; }
+        
+        .section { margin-bottom: 40px; }
+        .section h2 {
+            color: var(--navy-deep);
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 4px solid var(--celeste-hover);
+        }
+        .section h3 { color: var(--navy-gradient-end); font-size: 18px; margin: 20px 0 10px 0; }
+        .section p { margin-bottom: 15px; color: var(--text-secondary); }
+        .section ul, .section ol { margin-left: 30px; margin-bottom: 20px; }
+        .section li { margin-bottom: 10px; color: var(--text-secondary); }
+        
+        .info-box {
+            background: var(--celeste-brilliant);
+            border-left: 4px solid var(--celeste-hover);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .warning-box {
+            background: rgba(197, 160, 89, 0.1);
+            border-left: 4px solid var(--gold-dark-muted);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .success-box {
+            background: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .code-block {
+            background: var(--navy-deep);
+            color: var(--celeste-soft);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .step {
+            background: var(--bg-pearl-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--gold-dark-base);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: var(--celeste-hover);
+            color: var(--white);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background: var(--navy-deep); color: var(--white); font-weight: 600; }
+        tr:hover { background: var(--celeste-brilliant); }
+        
+        .footer {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 2px solid var(--border-color);
+            margin-top: 40px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Manual de Usuario</h1>
+            <p>Sistema de Inventario Moderno</p>
+            <p style="font-size: 14px; margin-top: 10px;">Versión 1.0</p>
+        </div>
+
+        <div class="section">
+            <h2>1. Introducción</h2>
+            <p>Bienvenido al <strong>Sistema de Inventario Moderno</strong>. Esta aplicación web permite gestionar de manera eficiente productos, proveedores y usuarios.</p>
+        </div>
+
+        <div class="section">
+            <h2>2. Requisitos del Sistema</h2>
+            <ul>
+                <li>Apache 2.4+ o Nginx</li>
+                <li>PHP 7.4 o superior</li>
+                <li>MySQL 5.7+ o MariaDB 10.3+</li>
+                <li>Extensión PDO MySQL habilitada</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>3. Instalación</h2>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Descargar los archivos</strong>
+                <p>Coloque todos los archivos en la carpeta raíz de su servidor web.</p>
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Crear la base de datos</strong>
+                <p>Ejecute el archivo <code>sql/database.sql</code> en phpMyAdmin.</p>
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Configurar la conexión</strong>
+                <p>Edite <code>config/config.php</code> y actualice las credenciales de la base de datos.</p>
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Acceder al sistema</strong>
+                <p>Abra su navegador y acceda a la URL donde instaló el sistema.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. Credenciales de Acceso</h2>
+            <table>
+                <tr><th>Campo</th><th>Valor</th></tr>
+                <tr><td>Email</td><td>admin@sistema.com</td></tr>
+                <tr><td>Contraseña</td><td>admin123</td></tr>
+                <tr><td>Rol</td><td>Administrador</td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>5. Uso del Sistema</h2>
+            <h3>5.1 Iniciar Sesión</h3>
+            <ol>
+                <li>Abra la página principal del sistema</li>
+                <li>Ingrese su correo electrónico</li>
+                <li>Ingrese su contraseña</li>
+                <li>Haga clic en "Iniciar Sesión"</li>
+            </ol>
+            
+            <h3>5.2 Dashboard Principal</h3>
+            <ul>
+                <li><strong>Banner de bienvenida:</strong> Mensaje personalizado</li>
+                <li><strong>Tarjetas de estadísticas:</strong> Resumen del sistema</li>
+                <li><strong>Alertas de stock bajo:</strong> Productos que requieren reposición</li>
+            </ul>
+            
+            <h3>5.3 Gestión de Productos</h3>
+            <p>Desde el módulo de productos puede:</p>
+            <ul>
+                <li>Agregar nuevos productos</li>
+                <li>Editar productos existentes</li>
+                <li>Ver detalles de cada producto</li>
+                <li>Eliminar productos (eliminación lógica)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6. Estructura de Archivos</h2>
+            <div class="code-block">
+sistema-inventario/
+├── config/
+│   ├── config.php
+│   └── database.php
+├── assets/
+│   ├── css/styles.css
+│   └── js/script.js
+├── modules/
+│   ├── productos.php
+│   ├── proveedores.php
+│   └── usuarios.php
+├── sql/database.sql
+├── docs/manual_usuario.html
+├── index.php
+├── dashboard.php
+└── logout.php
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Sistema de Inventario Moderno</strong></p>
+            <p>Manual de Usuario v1.0</p>
+            <p style="margin-top: 10px; font-size: 12px;">© 2024 - Todos los derechos reservados</p>
+        </div>
+    </div>
+</body>
+</html>
