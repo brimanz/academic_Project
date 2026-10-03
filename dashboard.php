@@ -1,180 +1,133 @@
 <?php
-require_once __DIR__ . '/config/config.php';
-checkAuth();
+$page_title = "Dashboard";
+require 'config.php';
+require 'includes/header.php';
 
-$pdo = getDB();
-
-// Obtener estadísticas
-$stats = [
-    'productos' => $pdo->query("SELECT COUNT(*) FROM productos WHERE estado = 'activo'")->fetchColumn(),
-    'proveedores' => $pdo->query("SELECT COUNT(*) FROM proveedores WHERE estado = 'activo'")->fetchColumn(),
-    'usuarios' => $pdo->query("SELECT COUNT(*) FROM usuarios WHERE estado = 'activo'")->fetchColumn(),
-    'stock_bajo' => $pdo->query("SELECT COUNT(*) FROM productos WHERE stock <= stock_minimo AND estado = 'activo'")->fetchColumn()
-];
-
-// Productos con stock bajo
-$stmt = $pdo->query("SELECT p.*, pr.nombre as proveedor_nombre 
-                     FROM productos p 
-                     LEFT JOIN proveedores pr ON p.proveedor_id = pr.id 
-                     WHERE p.stock <= p.stock_minimo AND p.estado = 'activo' 
-                     ORDER BY p.stock ASC LIMIT 5");
-$stock_bajo = $stmt->fetchAll();
-
-// Últimos productos agregados
-$stmt = $pdo->query("SELECT p.*, pr.nombre as proveedor_nombre 
-                     FROM productos p 
-                     LEFT JOIN proveedores pr ON p.proveedor_id = pr.id 
-                     WHERE p.estado = 'activo' 
-                     ORDER BY p.fecha_creacion DESC LIMIT 5");
-$ultimos_productos = $stmt->fetchAll();
+// Estadísticas
+$total_productos = $pdo->query("SELECT COUNT(*) FROM productos WHERE estado = 1")->fetchColumn();
+$total_categorias = $pdo->query("SELECT COUNT(*) FROM categorias WHERE estado = 1")->fetchColumn();
+$total_proveedores = $pdo->query("SELECT COUNT(*) FROM proveedores WHERE estado = 1")->fetchColumn();
+$total_usuarios = $pdo->query("SELECT COUNT(*) FROM usuarios WHERE estado = 1")->fetchColumn();
+$stock_bajo = $pdo->query("SELECT COUNT(*) FROM productos WHERE estado = 1 AND stock <= stock_minimo")->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Sistema de Inventario</title>
-    <link rel="stylesheet" href="./assets/css/styles.css">
+    <title><?= $page_title ?> | Centro Óptico La Económica F.P</title>
+    <link rel="stylesheet" href="estilo1.css">
 </head>
 <body>
-    <!-- Navegación Superior -->
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <span class="logo">📦</span>
-            <span class="brand-name">Sistema de Inventario</span>
-        </div>
-        <ul class="navbar-menu">
-            <li><a href="<?php echo APP_URL; ?>/dashboard.php" class="nav-link active">Dashboard</a></li>
-            <li><a href="<?php echo APP_URL; ?>/modules/productos.php" class="nav-link">Productos</a></li>
-            <li><a href="<?php echo APP_URL; ?>/modules/proveedores.php" class="nav-link">Proveedores</a></li>
-            <?php if ($_SESSION['user_rol'] === 'admin'): ?>
-            <li><a href="<?php echo APP_URL; ?>/modules/usuarios.php" class="nav-link">Usuarios</a></li>
-            <?php endif; ?>
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="dashboard.php" class="nav-brand">
+            👁️ La Económica F.P.
+        </a>
+        <button class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-menu" id="nav-menu">
+            <li class="nav-item">
+                <a href="dashboard.php" class="nav-link">
+                    🏠 Inicio
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">📋 Registros ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a href="modules/productos.php">📦 Productos</a></li>
+                    <li><a href="modules/categorias.php">🏷️ Categorías</a></li>
+                    <li><a href="modules/proveedores.php">🏢 Proveedores</a></li>
+                    <li><a href="modules/usuarios.php">👥 Usuarios</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">📊 Reportes ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a href="modules/reportes/inventario.php">📦 Inventario General</a></li>
+                    <li><a href="modules/reportes/stock_bajo.php">⚠️ Stock Bajo</a></li>
+                    <li><a href="modules/reportes/valor_inventario.php">💰 Valor del Inventario</a></li>
+                    <li><a href="modules/reportes/productos_categoria.php">📊 Por Categoría</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">📚 Documentación ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a href="docs/manual_usuario.php">📖 Manual de Usuario</a></li>
+                    <li><a href="docs/manual_tecnico.php">🔧 Manual Técnico</a></li>
+                    <li><a href="docs/faq.php">❓ Preguntas Frecuentes</a></li>
+                    <li><a href="docs/soporte.php">🆘 Soporte</a></li>
+                </ul>
+            </li>
+            <li class="nav-item" style="margin-left: auto;">
+                <span class="nav-link" style="color: var(--primary); font-weight:700;">
+                    👤 <?= htmlspecialchars($_SESSION['user_name'] ?? 'Usuario') ?>
+                </span>
+            </li>
+            <li class="nav-item">
+                <a href="logout.php" class="nav-link" style="color: var(--danger);">
+                    🚪 Salir
+                </a>
+            </li>
         </ul>
-        <div class="navbar-user">
-            <span class="user-name"><?= htmlspecialchars($_SESSION['user_name']) ?></span>
-            <span class="user-role"><?= ucfirst($_SESSION['user_rol']) ?></span>
-            <a href="<?php echo APP_URL; ?>/logout.php" class="btn btn-logout">Cerrar Sesión</a>
-        </div>
-    </nav>
-
-    <!-- Banner Principal -->
-    <div class="banner">
-        <div class="banner-content">
-            <h1>Bienvenido, <?= htmlspecialchars($_SESSION['user_name']) ?></h1>
-            <p>Gestiona tu inventario de manera eficiente y moderna</p>
-        </div>
-        <div class="banner-decoration">
-            <div class="banner-icon"></div>
+    </div>
+</nav>
+<main style="padding-top: 90px; min-height: 100vh; padding-bottom: 40px;">
+    <div class="hero">
+        <h1>Centro Óptico La Económica F.P.</h1>
+        <p class="hero-subtitle">Sistema Integral de Gestión y Control</p>
+        
+        <div class="hero-stats">
+            <div class="stat-card">
+                <div class="stat-number"><?= $total_productos ?></div>
+                <div class="stat-label">📦 Productos Registrados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?= $total_categorias ?></div>
+                <div class="stat-label">🏷️ Categorías</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?= $total_proveedores ?></div>
+                <div class="stat-label">🏢 Proveedores</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?= $total_usuarios ?></div>
+                <div class="stat-label">👥 Usuarios Activos</div>
+            </div>
+            <div class="stat-card" style="<?= $stock_bajo > 0 ? 'border: 2px solid var(--danger);' : '' ?>">
+                <div class="stat-number" style="<?= $stock_bajo > 0 ? 'color: var(--danger);' : '' ?>">
+                    <?= $stock_bajo ?>
+                </div>
+                <div class="stat-label">⚠️ Stock Bajo</div>
+            </div>
         </div>
     </div>
+</main>
 
-    <!-- Contenido Principal -->
-    <main class="main-content">
-        <!-- Estadísticas -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">📦</div>
-                <div class="stat-info">
-                    <h3><?= $stats['productos'] ?></h3>
-                    <p>Productos Activos</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">🏭</div>
-                <div class="stat-info">
-                    <h3><?= $stats['proveedores'] ?></h3>
-                    <p>Proveedores</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"></div>
-                <div class="stat-info">
-                    <h3><?= $stats['usuarios'] ?></h3>
-                    <p>Usuarios</p>
-                </div>
-            </div>
-            <div class="stat-card stat-warning">
-                <div class="stat-icon">⚠️</div>
-                <div class="stat-info">
-                    <h3><?= $stats['stock_bajo'] ?></h3>
-                    <p>Stock Bajo</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Secciones de contenido -->
-        <div class="content-grid">
-            <!-- Alertas de Stock Bajo -->
-            <div class="content-card">
-                <div class="card-header">
-                    <h2>️ Alertas de Stock Bajo</h2>
-                    <a href="<?php echo APP_URL; ?>/modules/productos.php" class="btn btn-small">Ver Todos</a>
-                </div>
-                <div class="card-body">
-                    <?php if (empty($stock_bajo)): ?>
-                        <p class="empty-state">No hay productos con stock bajo</p>
-                    <?php else: ?>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Producto</th>
-                                    <th>Stock</th>
-                                    <th>Mínimo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($stock_bajo as $item): ?>
-                                <tr class="row-warning">
-                                    <td><?= htmlspecialchars($item['codigo']) ?></td>
-                                    <td><?= htmlspecialchars($item['nombre']) ?></td>
-                                    <td><strong><?= $item['stock'] ?></strong></td>
-                                    <td><?= $item['stock_minimo'] ?></td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <!-- Últimos Productos -->
-            <div class="content-card">
-                <div class="card-header">
-                    <h2>🆕 Últimos Productos</h2>
-                    <a href="<?php echo APP_URL; ?>/modules/productos.php" class="btn btn-small">Ver Todos</a>
-                </div>
-                <div class="card-body">
-                    <?php if (empty($ultimos_productos)): ?>
-                        <p class="empty-state">No hay productos registrados</p>
-                    <?php else: ?>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Producto</th>
-                                    <th>Precio</th>
-                                    <th>Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($ultimos_productos as $item): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($item['codigo']) ?></td>
-                                    <td><?= htmlspecialchars($item['nombre']) ?></td>
-                                    <td>$<?= number_format($item['precio'], 2) ?></td>
-                                    <td><?= $item['stock'] ?></td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script src="<?php echo APP_URL; ?>/assets/js/script.js"></script>
+<script>
+    // Toggle Menú Móvil
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        
+        // Dropdowns en móvil
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768 && this.querySelector('.dropdown-menu')) {
+                    e.preventDefault();
+                    this.classList.toggle('dropdown-active');
+                }
+            });
+        });
+    }
+</script>
 </body>
 </html>
